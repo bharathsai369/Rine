@@ -46,7 +46,11 @@ export const sendMessage = async (req, res) => {
     let imageUrl;
     if (image) {
       // Upload base64 image to cloudinary
-      const uploadResponse = await cloudinary.uploader.upload(image);
+      const uploadResponse = await cloudinary.uploader.upload(image, {
+        folder: "Rine/chat_images",
+        public_id: `user_${req.user._id}_message_${Date.now()}`,
+        overwrite: true,
+      });
       imageUrl = uploadResponse.secure_url;
     }
 
