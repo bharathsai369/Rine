@@ -2,9 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
+import path from "path";
 
 import { connectDB } from "./lib/db.js";
 
@@ -38,14 +37,12 @@ app.use((req, res, next) => {
   next();
 });
 
-if (
-  process.env.NODE_ENV === "production" &&
-  fs.existsSync(path.join(__dirname, "../../frontend/dist"))
-) {
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+if (process.env.NODE_ENV === "production") {
+  const frontendPath = path.join(__dirname, "../../frontend/dist");
+  app.use(express.static(frontendPath));
 
-  app.get("/*", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "../../frontend/dist/index.html"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
